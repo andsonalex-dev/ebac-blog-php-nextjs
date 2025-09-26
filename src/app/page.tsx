@@ -1,95 +1,70 @@
-import Image from "next/image";
 import styles from "./page.module.css";
+import { BlogPost } from "@/interfaces/interface";
+import { fetchBlogPosts } from "@/services/service";
+import { normalizeSlug } from "@/utils/slug";
+import Link from "next/link";
+import Image from "next/image";
+import { LimparImagemUrl } from "@/utils/limparUrlImagem";
 
-export default function Home() {
+// Revalida a página a cada 60 segundos (ISR)
+export const revalidate = 60;
+
+export default async function Home() {
+  const blogPosts = await fetchBlogPosts();
+  console.log(blogPosts);
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+        <div className={styles.header}>
+          <h2>Blog PHP Tecnologia EBAC</h2>
         </div>
+
+        <section className={styles.section}>
+          {blogPosts.map((post: BlogPost) => (
+            <article key={post.id} className={styles.card}>
+              <div className={styles.cardImage}>
+                <Image
+                  className={styles.cardImg}
+                  src={LimparImagemUrl(post.cover_image)}
+                  alt={post.title}
+                  width={600}
+                  height={280}
+                  unoptimized
+                />
+              </div>
+
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>{post.title}</h3>
+                <div className={styles.cardTags}>
+                  {post.tag_list && post.tag_list.length > 0 ? (
+                    post.tag_list.slice(0, 3).map((tag) => (
+                      <span key={tag} className={styles.cardTag}>
+                        #{tag}
+                      </span>
+                    ))
+                  ) : (
+                    <span className={styles.cardTag}>
+                      #php
+                    </span>
+                  )}
+                  {post.tag_list && post.tag_list.length > 3 && (
+                    <span className={styles.cardTagMore}>
+                      +{post.tag_list.length - 3}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <p className={styles.cardDescription}>{post.description}</p>
+
+              <Link href={`/artigos/${normalizeSlug(post.slug)}`} className={styles.cardButton}>
+                Saiba mais
+              </Link>
+            </article>
+          ))}
+        </section>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
   );
 }
