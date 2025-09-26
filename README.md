@@ -149,27 +149,14 @@ A aplicação consome a API do DEV.to para obter artigos:
 ## SEO e Performance
 
 ### Otimizações Implementadas
-- ✅ Metadados dinâmicos por página
-- ✅ Open Graph e Twitter Cards
-- ✅ URLs semânticas com slugs
-- ✅ Sitemap automático
-- ✅ Robots.txt configurado
-- ✅ Otimização de imagens
-- ✅ Loading states para UX
-- ✅ Error boundaries
-
-### Core Web Vitals
-- **FCP**: First Contentful Paint otimizado
-- **LCP**: Largest Contentful Paint < 2.5s
-- **CLS**: Cumulative Layout Shift mínimo
-
-## Contribuição
-
-1. Faça fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -am 'Add nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+-  Metadados dinâmicos por página
+-  Open Graph
+-  URLs semânticas com slugs
+-  Sitemap automático
+-  Robots.txt configurado
+-  Otimização de imagens
+-  Loading states para UX
+-  Error boundaries
 
 ## Licença
 
