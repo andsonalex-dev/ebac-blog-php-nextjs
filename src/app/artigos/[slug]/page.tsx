@@ -13,9 +13,9 @@ import Link from 'next/link';
 export const revalidate = 3600;
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function PostContent({ slug }: Readonly<{ slug: string }>) {
@@ -142,10 +142,12 @@ async function PostContent({ slug }: Readonly<{ slug: string }>) {
   );
 }
 
-export default function PostPage({ params }: Readonly<PostPageProps>) {
+export default async function PostPage({ params }: Readonly<PostPageProps>) {
+  const { slug } = await params;
+  
   return (
     <Suspense fallback={<Loading />}>
-      <PostContent slug={params.slug} />
+      <PostContent slug={slug} />
     </Suspense>
   );
 }
@@ -167,7 +169,8 @@ export async function generateStaticParams() {
 
 // Geração de metadados dinâmicos
 export async function generateMetadata({ params }: Readonly<PostPageProps>) {
-  const post = await fetchBlogPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await fetchBlogPostBySlug(slug);
   
   if (!post) {
     return {
